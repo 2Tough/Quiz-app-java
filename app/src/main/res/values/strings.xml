@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyTestAppJava</string>
+    <string name="app_question">What is the capital of Nicaragua?</string>
+    <string name="yes_btn">Managua</string>
+    <string name="no_btn">San Jose</string>
+    <string name="answer">Answer properly</string>
+    <string name="correct_toast">Correct!</string>
+    <string name="incorrect_toast">Incorrect!</string>
+
+</resources>
