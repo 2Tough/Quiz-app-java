@@ -1,11 +1,10 @@
-package testapp.testingapp.mytestappjava;
+package com.geoapp.geoquiz;
 
-public class Question {
-
+public class Questions {
     private int mTextResId;
     private boolean mAnswerTrue;
 
-    public Question(int textResId, boolean answerTrue) {
+    public Questions(int textResId, boolean answerTrue) {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
     }
@@ -25,4 +24,7 @@ public class Question {
     public void setAnswerTrue(boolean answerTrue) {
         mAnswerTrue = answerTrue;
     }
+
+
+
 }

@@ -1,4 +1,4 @@
-package testapp.testingapp.mytestappjava;
+package com.geoapp.geoquiz;
 
 import org.junit.Test;
 

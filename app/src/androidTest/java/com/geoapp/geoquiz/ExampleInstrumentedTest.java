@@ -1,4 +1,4 @@
-package testapp.testingapp.mytestappjava;
+package com.geoapp.geoquiz;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("testapp.testingapp.mytestappjava", appContext.getPackageName());
+        assertEquals("com.geoapp.geoquiz", appContext.getPackageName());
     }
 }

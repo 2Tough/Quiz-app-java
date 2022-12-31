@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'testapp.testingapp.mytestappjava'
+    namespace 'com.geoapp.geoquiz'
     compileSdk 32
 
     defaultConfig {
-        applicationId "testapp.testingapp.mytestappjava"
+        applicationId "com.geoapp.geoquiz"
         minSdk 23
         targetSdk 32
         versionCode 1
