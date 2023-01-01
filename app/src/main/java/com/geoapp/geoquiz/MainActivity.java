@@ -3,6 +3,7 @@ package com.geoapp.geoquiz;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
 
+
     private Button mTrueButton;
+    private Button mCheatButton;
     private Button mFalseButton;
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
             new Questions(R.string.question_asia, true),
     };
     private int mCurrentIndex = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,19 @@ public class MainActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+        mCheatButton = (Button)findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start CheatActivity
+                Intent intent = new Intent(MainActivity.this, CheatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
         updateQuestion();
 
     }
@@ -135,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             messageResId = R.string.incorrect_toast;
         }
+
+        mQuestionBank[mCurrentIndex].setAlreadyAnswered(true);
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
                 .show();
