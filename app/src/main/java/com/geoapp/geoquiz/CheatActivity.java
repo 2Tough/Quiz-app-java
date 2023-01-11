@@ -1,15 +1,29 @@
 package com.geoapp.geoquiz;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.OptionalDataException;
+
 public class CheatActivity extends AppCompatActivity {
+
+    private boolean mAlreadyAnswered = false;
+    public boolean isAlreadyAnswered() { return mAlreadyAnswered; }
+    public void setAlreadyAnswered(boolean alreadyAnswered) { mAlreadyAnswered = alreadyAnswered; }
+
 
     private static final String EXTRA_ANSWER_IS_TRUE =
             "com.geoapp.geoquiz.answer_is_true";
@@ -20,6 +34,8 @@ public class CheatActivity extends AppCompatActivity {
     private TextView mAnswerTextView;
     private Button mShowAnswerButton;
 
+
+
     public static Intent newIntent(Context packageContext, boolean answerIsTrue) {
         Intent intent = new Intent(packageContext, CheatActivity.class);
         intent.putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue);
@@ -28,6 +44,12 @@ public class CheatActivity extends AppCompatActivity {
 
     public static boolean wasAnswerShown(Intent result) {
         return result.getBooleanExtra(EXTRA_ANSWER_SHOWN, false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "Cheat activity active");
     }
 
     @Override
@@ -44,11 +66,32 @@ public class CheatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mAnswerIsTrue) {
+                    Log.d(TAG, "Answer is true! Good job");
                     mAnswerTextView.setText(R.string.true_button);
+
                 } else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
                 setAnswerShownResult(true);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                int cx = mShowAnswerButton.getWidth() / 2;
+                int cy = mShowAnswerButton.getHeight() / 2;
+                float radius = mShowAnswerButton.getWidth();
+                Animator anim = ViewAnimationUtils
+                        .createCircularReveal(mShowAnswerButton, cx, cy, radius, 0);
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mShowAnswerButton.setVisibility(View.INVISIBLE);
+                    }
+                });
+                anim.start();
+                } else {
+                    mShowAnswerButton.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
@@ -59,3 +102,5 @@ public class CheatActivity extends AppCompatActivity {
         setResult(RESULT_OK, data);
     }
 }
+
+

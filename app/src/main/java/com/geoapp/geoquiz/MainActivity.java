@@ -1,9 +1,8 @@
 package com.geoapp.geoquiz;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity<data> extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String KEY_INDEX = "index";
@@ -27,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mPreviousButton;
     private TextView mQuestionTextView;
 
+
     private Questions[] mQuestionBank = new Questions[] {
+
             new Questions(R.string.question_australia, true),
             new Questions(R.string.question_oceans, true),
             new Questions(R.string.question_mideast, false),
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
+    private boolean mAlreadyAnswered = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +50,39 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+
         }
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
 
 
         mTrueButton = (Button) findViewById(R.id.true_button);
+
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 checkAnswer(true);
+
+                System.out.println("testing true button deactivated");
+                //Button gets inactivated but applies for every question unfortunately.
+                System.out.println(findViewById(R.id.true_button));
+                //findViewById(R.id.true_button).setEnabled(false);
+                System.out.println(mQuestionBank[mCurrentIndex].isAnswerTrue());
+                System.out.println(findViewById(R.id.true_button));
+
+                mTrueButton.setTag(mCurrentIndex);
+                int tag = (int) mTrueButton.getTag();
+                System.out.println(tag);
+                View buttonTag = mTrueButton.findViewWithTag(tag);
+                System.out.println(buttonTag);
+                System.out.println("This is the button tag: " + buttonTag);
+
+                if (tag == 0) {
+                    System.out.println("This is the button tag for the first question: " + buttonTag);
+                    System.out.println("It works. This is question 0.");
+
+                }
             }
         });
         mFalseButton = (Button) findViewById(R.id.false_button);
@@ -98,54 +124,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         updateQuestion();
 
+
+
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-
-        if (requestCode == REQUEST_CODE_CHEAT) {
-            if (data == null) {
-                return;
-            } mIsCheater = CheatActivity.wasAnswerShown(data);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        Log.i(TAG, "onSaveInstanceState");
-        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart() called");
+        Log.d(TAG, "onStart() called and is working");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume() called");
+        Log.d(TAG, "onResume() called and comes second");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause() called");
+        Log.d(TAG, "onPause() called and app is now paused");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop called");
+        Log.d(TAG, "onStop() called and app stopped");
     }
 
     @Override
@@ -178,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
                 .show();
-        
+
 
     }
 }
