@@ -39,7 +39,7 @@ public class MainActivity<data> extends AppCompatActivity {
 
     private Questions[] mQuestionBank = new Questions[] {
 
-            new Questions(R.string.question_australia, true),
+            new Questions(R.string.question_nicaragua, true),
             new Questions(R.string.question_oceans, true),
             new Questions(R.string.question_mideast, false),
             new Questions(R.string.question_africa, false),

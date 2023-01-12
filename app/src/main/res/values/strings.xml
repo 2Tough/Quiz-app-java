@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
-    <string name="question_australia">Canberra is the capital of Australia.</string>
+    <string name="question_nicaragua">Managua is the capital of Nicaragua.</string>
     <string name="true_button">True</string>
     <string name="question_oceans">The Pacific Ocean is larger than
 the Atlantic Ocean.</string>
