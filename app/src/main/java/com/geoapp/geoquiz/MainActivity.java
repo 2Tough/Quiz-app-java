@@ -1,6 +1,8 @@
 package com.geoapp.geoquiz;
 
 
+import static android.widget.Toast.*;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,12 +23,18 @@ public class MainActivity<data> extends AppCompatActivity {
     private static final int REQUEST_CODE_CHEAT = 0;
 
 
+    private boolean mAlreadyAnswered = false;
+    public boolean isAlreadyAnswered() { return mAlreadyAnswered;}
+    public void setAlreadyAnswered(boolean alreadyAnswered) { mAlreadyAnswered = alreadyAnswered; }
+
+
     private Button mTrueButton;
     private Button mCheatButton;
     private Button mFalseButton;
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
     private TextView mQuestionTextView;
+    private int grade = 0;
 
 
     private Questions[] mQuestionBank = new Questions[] {
@@ -38,9 +46,23 @@ public class MainActivity<data> extends AppCompatActivity {
             new Questions(R.string.question_americas, true),
             new Questions(R.string.question_asia, true),
     };
+
+    //This solution doesn't work as the state doesn't remain
+   /* private void setButtonEnabled(boolean enabled) {
+        mTrueButton = (Button) findViewById(R.id.true_button);
+        mFalseButton = (Button) findViewById(R.id.false_button);
+        mTrueButton.setEnabled(enabled);
+        mFalseButton.setEnabled(enabled);
+    }*/
+
+
+
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
-    private boolean mAlreadyAnswered = false;
+    private int score = 0;
+    //Location oа boolean below is not correct
+    private boolean[] mQuestionAnswered = new boolean[mQuestionBank.length];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +76,6 @@ public class MainActivity<data> extends AppCompatActivity {
         }
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
-
-
         mTrueButton = (Button) findViewById(R.id.true_button);
 
         mTrueButton.setOnClickListener(new View.OnClickListener() {
@@ -64,25 +84,22 @@ public class MainActivity<data> extends AppCompatActivity {
 
                 checkAnswer(true);
 
-                System.out.println("testing true button deactivated");
-                //Button gets inactivated but applies for every question unfortunately.
-                System.out.println(findViewById(R.id.true_button));
-                //findViewById(R.id.true_button).setEnabled(false);
-                System.out.println(mQuestionBank[mCurrentIndex].isAnswerTrue());
-                System.out.println(findViewById(R.id.true_button));
+//                System.out.println("testing true button deactivated");
+//                //Button gets inactivated but applies for every question unfortunately.
+//                System.out.println(findViewById(R.id.true_button));
+//                findViewById(R.id.true_button).setEnabled(false);
+//                System.out.println(mQuestionBank[mCurrentIndex].isAnswerTrue());
+//                System.out.println(findViewById(R.id.true_button));
 
-                mTrueButton.setTag(mCurrentIndex);
-                int tag = (int) mTrueButton.getTag();
-                System.out.println(tag);
-                View buttonTag = mTrueButton.findViewWithTag(tag);
-                System.out.println(buttonTag);
-                System.out.println("This is the button tag: " + buttonTag);
-
-                if (tag == 0) {
-                    System.out.println("This is the button tag for the first question: " + buttonTag);
-                    System.out.println("It works. This is question 0.");
-
-                }
+//                mTrueButton.setTag(mCurrentIndex);
+//                int tag = (int) mTrueButton.getTag();
+//                System.out.println(tag);
+//                View buttonTag = mTrueButton.findViewWithTag(tag);
+//                System.out.println(buttonTag);
+//                System.out.println("This is the button tag: " + buttonTag);
+//                grade ++;
+//                System.out.println("Your grade is " + grade);
+//                String messageGrade = "Your grade is " + grade +"/" + mQuestionBank.length ;
             }
         });
         mFalseButton = (Button) findViewById(R.id.false_button);
@@ -131,6 +148,7 @@ public class MainActivity<data> extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -164,27 +182,49 @@ public class MainActivity<data> extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+        mTrueButton.setEnabled(true);
+        mFalseButton.setEnabled(true);
     }
+
+/*    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "`onSave`InstanceState() Called and working!");
+        Log.putInt(QUESTION_INDEX_KEY, mCurrentIndex);
+        outState.putBooleanArray(QUESTIONS_ANSWERED_KEY, mQuestionsAnswered);
+    }*/
+
+
 
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
         int messageResId = 0;
-
+        //mQuestionsAnswered[mCurrentIndex] = true;
+        /*mTrueButton.setEnabled(false);
+        mFalseButton.setEnabled(false);
+        */
         if (mIsCheater) {
             messageResId = R.string.judgment_toast;
         } else {
             if (userPressedTrue == answerIsTrue) {
                 messageResId = R.string.correct_toast;
+                score++;
             } else {
-                messageResId = R.string.correct_toast;
+                messageResId = R.string.incorrect_toast;
             }
         }
 
         mQuestionBank[mCurrentIndex].setAlreadyAnswered(true);
 
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
-                .show();
+        if(mCurrentIndex != mQuestionBank.length - 1) {
+            makeText(this, messageResId, LENGTH_SHORT)
+                    .show();
+        } else {
+            makeText(this, "Your score: " + score + "/" + mQuestionBank.length, LENGTH_LONG).show();
+        }
+
+        mTrueButton.setEnabled(false);
+        mFalseButton.setEnabled(false);
 
 
     }
